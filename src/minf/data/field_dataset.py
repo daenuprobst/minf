@@ -2,7 +2,7 @@ from typing import List, Optional, Sequence
 import torch
 from torch.utils.data import Dataset
 
-from metamols.metamol import Metamol
+from minf.metamol import Metamol
 
 
 class FieldDataset(Dataset):

@@ -3,14 +3,16 @@
 import torch
 from torch import nn
 import torch.nn.functional as F
-from minf.models import SirenNet, Modulator
+from minf.models import SirenNetUnbatched, ModulatorUnbatched
 from minf.models.utils import get_grid
 
 
 class Decoder(nn.Module):
     def __init__(self, net, output_shape, latent_dim=None, n_shapes=0):
         super().__init__()
-        assert isinstance(net, SirenNet), "SirenWrapper must receive a Siren network"
+        assert isinstance(
+            net, SirenNetUnbatched
+        ), "SirenWrapper must receive a Siren network"
 
         self.net = net
         output_shape = list(output_shape)
@@ -24,7 +26,7 @@ class Decoder(nn.Module):
 
         self.modulator = None
         if latent_dim is not None:
-            self.modulator = Modulator(
+            self.modulator = ModulatorUnbatched(
                 dim_in=latent_dim, dim_hidden=net.dim_hidden, num_layers=net.num_layers
             )
         mgrid = get_grid(self.output_shape)

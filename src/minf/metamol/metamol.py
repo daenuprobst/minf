@@ -23,11 +23,10 @@ from rdkit.Chem import (
 )
 
 from scipy.ndimage import gaussian_filter
-from sklearn.decomposition import PCA
 
 from tqdm import tqdm
 
-from metamols import Metaatom
+from minf.metamol.metaatom import Metaatom
 from .atomic_props import get_atomic_props
 
 
@@ -260,7 +259,7 @@ class Metamol:
                     2 * len(elements) + 2 + self.properties.index(property_name),
                 ] = property_field
 
-        return vector_field
+        return torch.nan_to_num(vector_field)
 
     def to_image(self, path, bins=0, smooth=0.0):
         """
@@ -653,9 +652,11 @@ class Metamol:
 
         coords = np.array(coords)
         atomic_numbers = np.array(atomic_numbers)
+        is_complex = True
 
         if not complex:
             complex = [0] * len(atomic_numbers)
+            is_complex = False
 
         matms = []
 
@@ -702,7 +703,7 @@ class Metamol:
             radius_property=radius_property,
             properties=properties,
             scale=scale,
-            is_complex=bool(complex),
+            is_complex=is_complex,
         )
 
         for i in range(len(matms)):
@@ -926,6 +927,7 @@ class Metamol:
         b: float = 1.0,
         b_shape: Optional[float] = None,
         radius_property: str = "radius_vanDerWaals",
+        properties: Optional[List] = None,
         removeHs: bool = False,
         sanitize: bool = False,
     ) -> Tuple["Metamol", Mol]:
@@ -946,6 +948,8 @@ class Metamol:
         Returns:
             Tuple["Metamol", Mol]: A tuple containing the Metamol object and the combined RDKit Mol object.
         """
+        if properties is None:
+            properties = []
 
         pdb_mol = pdb_path
         sdf_mol = sdf_path
@@ -968,12 +972,7 @@ class Metamol:
 
         return (
             Metamol.from_rdkit_mol(
-                mol,
-                size,
-                threshold,
-                b,
-                b_shape,
-                radius_property,
+                combined_mol, size, threshold, b, b_shape, radius_property, properties
             ),
             combined_mol,
         )

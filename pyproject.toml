@@ -24,7 +24,20 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = []
+dependencies = [
+  "einops==0.8.0",
+  "elementy==0.0.18",
+  "matplotlib==3.10.0",
+  "numpy==2.2.2",
+  "pandas==2.2.3",
+  "Pillow==11.1.0",
+  "rdkit==2024.9.4",
+  "scikit_learn==1.6.1",
+  "scipy==1.15.1",
+  "torch==2.5.1",
+  "tqdm==4.67.1",
+  "yt==4.4.0",
+]
 
 [project.urls]
 Documentation = "https://github.com/Daniel Probst/minf#readme"
