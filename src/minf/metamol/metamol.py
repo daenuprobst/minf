@@ -225,7 +225,7 @@ class Metamol:
         n_channels = len(elements) + 1 + len(self.properties)
 
         if self.is_complex:
-            n_channels *= 2
+            n_channels = n_channels * 2
 
         vector_field = torch.from_numpy(
             np.zeros((*self.field_a.shape, n_channels), dtype=np.float32)
@@ -378,7 +378,7 @@ class Metamol:
                 self.element_fields_b[atom.atomic_number] += field
 
         # Calculate property fields if they exist
-        if len(self.property_fields_a) > 1:
+        if len(self.property_fields_a) > 0:
             fields = self.get_cached_property_field(
                 self.property_fields_cache, atom.v, atom.atomic_number
             )

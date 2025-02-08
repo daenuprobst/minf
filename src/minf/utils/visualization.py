@@ -15,5 +15,4 @@ def plot_field(
 
     cam = sc.add_camera(ds, lens_type=lens_type)
     cam.resolution = [resolution, resolution]
-    sc.show()
     return sc
