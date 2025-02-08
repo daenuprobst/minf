@@ -26,9 +26,7 @@ class FieldDataset(Dataset):
         self.properties = properties
         if self.properties is None:
             self.properties = [
-                "electron_affinity",
                 "wigner_seitz_electron_density",
-                "electronegativity_allen",
             ]
         self.radius_property = radius_property
         self.numconf = numconf

@@ -36,6 +36,7 @@ dependencies = [
   "scipy==1.15.1",
   "torch==2.5.1",
   "tqdm==4.67.1",
+  "typer==0.15.1",
   "yt==4.4.0",
 ]
 
