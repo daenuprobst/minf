@@ -52,7 +52,7 @@ def main(
     optim = torch.optim.Adam(lr=1e-4, params=autoencoder.parameters())
 
     min_loss = 9999999
-    for epoch in (pbar := tqdm(range(500))):
+    for epoch in (pbar := tqdm(range(epochs))):
         total_loss = 0
         for batch in dl:
             loss, _, _ = autoencoder(batch.cuda())
