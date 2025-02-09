@@ -4,7 +4,10 @@ import numpy as np
 
 
 def plot_field(
-    field: torch.Tensor, resolution: int = 512, lens_type: str = "plane-parallel"
+    field: torch.Tensor,
+    resolution: int = 512,
+    lens_type: str = "plane-parallel",
+    cam_rotate: float = 0.0,
 ):
     arr = field.numpy()
 
@@ -14,5 +17,6 @@ def plot_field(
     sc = yt.create_scene(ds)
 
     cam = sc.add_camera(ds, lens_type=lens_type)
+    cam.rotate(cam_rotate)
     cam.resolution = [resolution, resolution]
     return sc
