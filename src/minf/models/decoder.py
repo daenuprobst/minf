@@ -21,8 +21,8 @@ class Decoder(nn.Module):
 
         if latent_dim is not None and n_shapes > 0:
             self.latents = torch.zeros(n_shapes, latent_dim).normal_(0, 1.0)
-            # self.latents = torch.nn.Parameter(self.latents)
-            self.latents = self.latents.cuda()
+            self.latents = torch.nn.Parameter(self.latents)
+            # self.latents = self.latents.cuda()
 
         self.modulator = None
         if latent_dim is not None:
