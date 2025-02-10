@@ -1,0 +1,113 @@
+from pathlib import Path
+import pickle
+import typer
+import torch
+from tqdm import tqdm
+from minf.data import FieldDataset
+from minf.models import Autoencoder, SirenNet
+from minf.utils import plot_field
+from torch.utils.data import DataLoader
+import numpy as np
+import yt
+from sklearn.manifold import TSNE
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+import pandas as pd
+
+from rdkit import Chem
+from rdkit.Chem import rdMolDescriptors
+
+app = typer.Typer(pretty_exceptions_show_locals=False)
+
+
+@app.command()
+def main(model_file: Path, csv_file: Path, out_folder: Path, resolution: int = 16):
+    resolution = 16
+
+    df = pd.read_csv(csv_file)
+
+    smiles = df["smiles"].tolist()
+
+    fd = FieldDataset(smiles, resolution=resolution)
+    dl = DataLoader(fd, batch_size=4, shuffle=True)
+    dl_test = DataLoader(fd, batch_size=8, shuffle=False)
+
+    net = SirenNet(
+        dim_in=4,
+        dim_hidden=512,
+        dim_out=1,
+        num_layers=8,
+        w0=1.0,
+        w0_initial=30.0,
+        use_bias=True,
+        final_activation=None,
+    )
+
+    autoencoder = Autoencoder(
+        net,
+        in_channels=10,
+        output_shape=[resolution, resolution, resolution, 10, 1],
+        latent_dim=512,
+    )
+
+    autoencoder.cuda()
+
+    optim = torch.optim.Adam(lr=1e-4, params=autoencoder.parameters())
+
+    # Load the model
+    autoencoder.load_state_dict(torch.load(model_file, weights_only=True))
+    autoencoder.cuda()
+
+    x = []
+    for batch in tqdm(dl_test, total=len(dl_test)):
+        latents = autoencoder.encode(batch.cuda())
+        predictions = autoencoder.predict(latents)
+
+        for latent in latents:
+            x.append(latent.cpu().detach().numpy())
+        if len(x) % 100 == 0:
+            print(len(x))
+        break
+
+    x = []
+    for batch in tqdm(dl_test, total=len(dl_test)):
+        latents = autoencoder.encode(batch.cuda())
+        for latent in latents:
+            x.append(latent.cpu().detach().numpy())
+        if len(x) % 100 == 0:
+            print(len(x))
+
+    x_pc = PCA(n_components=2).fit_transform(x)
+
+    fig, ax = plt.subplots(figsize=(7, 7))
+
+    # for i, coord in enumerate(x_pc):
+    #     ax.text(coord[0],
+    #             coord[1],
+    #             str(y[i]), fontsize=18)
+
+    ax.scatter(x_pc.T[0], x_pc.T[1])
+    plt.savefig(str(Path(out_folder, "pca.png")))
+
+    for i in range(1):
+        print(i)
+        y = df["PEOE6 (PEOE6)"].tolist()
+        # for smi in df["smiles"].tolist():
+        #     mol = Chem.MolFromSmiles(smi)
+        #     y.append(rdMolDescriptors.MQNs_(mol)[i])
+
+        x_pc = TSNE(n_components=2).fit_transform(np.array(x))
+
+        fig, ax = plt.subplots(figsize=(7, 7))
+
+        # for i, coord in enumerate(x_pc):
+        #     ax.text(coord[0],
+        #             coord[1],
+        #             str(y[i]), fontsize=18)
+
+        ax.scatter(x_pc.T[0], x_pc.T[1], c=y)
+        plt.savefig(str(Path(out_folder, f"tsne-{i}.png")))
+
+
+if __name__ == "__main__":
+    app()
