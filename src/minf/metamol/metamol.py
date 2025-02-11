@@ -893,6 +893,7 @@ class Metamol:
         b: float = 1.0,
         b_shape: Optional[float] = None,
         radius_property: str = "radius_vanDerWaals",
+        properties: Optional[List] = None,
         removeHs: bool = True,
     ) -> Tuple["Metamol", Mol]:
         """
@@ -914,9 +915,119 @@ class Metamol:
 
         mol = MolFromPDBFile(str(path), removeHs=removeHs)
         return (
-            Metamol.from_rdkit_mol(mol, size, threshold, b, b_shape, radius_property),
+            Metamol.from_rdkit_mol(
+                mol, size, threshold, b, b_shape, radius_property, properties
+            ),
             mol,
         )
+
+    @staticmethod
+    def from_pdb_conformers(
+        path: Union[str, Path],
+        size: int = 128,
+        threshold: float = 1.0,
+        b: float = 1.0,
+        b_shape: Optional[float] = None,
+        radius_property: str = "radius_vanDerWaals",
+        properties: Optional[List] = None,
+        removeHs: bool = True,
+    ) -> List[Tuple["Metamol", Mol]]:
+        """
+        Create a Metamol object and an RDKit Mol object from a PDB file.
+
+        Args:
+            path (Union[str, Path]): The path to the PDB file.
+            size (int, optional): The size parameter for the Metamol object. Defaults to 128.
+            threshold (float, optional): The threshold parameter for the Metamol object. Defaults to 1.0.
+            b (float, optional): The b parameter for the Metamol object. Defaults to 1.0.
+            b_shape (float, optional): The b_shape parameter for the Metamol object. Defaults to None.
+            radius_property (str, optional): The radius property to use for the Metamol object. Defaults to "radius_vanDerWaals".
+            properties (List, optional): Additional properties for the Metamol object. Defaults to None.
+            removeHs (bool, optional): Whether to remove hydrogens. Defaults to True.
+
+        Returns:
+            List[Tuple["Metamol", Mol]]: A list of tuples containing the Metamol object and the respective RDKit Mol objects.
+        """
+
+        mol = MolFromPDBFile(str(path), removeHs=removeHs)
+        rdMolAlign.AlignMolConformers(mol)
+
+        out = []
+        for conformer in mol.GetConformers():
+            conf_mol = Mol(mol)
+            conf_mol.RemoveAllConformers()
+            conf_mol.AddConformer(conformer, assignId=True)
+            out.append(
+                (
+                    Metamol.from_rdkit_mol(
+                        conf_mol,
+                        size,
+                        threshold,
+                        b,
+                        b_shape,
+                        radius_property,
+                        properties,
+                    ),
+                    conf_mol,
+                )
+            )
+
+        return out
+
+    @staticmethod
+    def from_pdbs(
+        path: List[Union[str, Path]],
+        size: int = 128,
+        threshold: float = 1.0,
+        b: float = 1.0,
+        b_shape: Optional[float] = None,
+        radius_property: str = "radius_vanDerWaals",
+        properties: Optional[List] = None,
+        removeHs: bool = True,
+    ) -> List[Tuple["Metamol", Mol]]:
+        """
+        Create a Metamol object and an RDKit Mol object from a PDB file.
+
+        Args:
+            path (Union[str, Path]): The path to the PDB file.
+            size (int, optional): The size parameter for the Metamol object. Defaults to 128.
+            threshold (float, optional): The threshold parameter for the Metamol object. Defaults to 1.0.
+            b (float, optional): The b parameter for the Metamol object. Defaults to 1.0.
+            b_shape (float, optional): The b_shape parameter for the Metamol object. Defaults to None.
+            radius_property (str, optional): The radius property to use for the Metamol object. Defaults to "radius_vanDerWaals".
+            properties (List, optional): Additional properties for the Metamol object. Defaults to None.
+            removeHs (bool, optional): Whether to remove hydrogens. Defaults to True.
+
+        Returns:
+            List[Tuple["Metamol", Mol]]: A list of tuples containing the Metamol object and the respective RDKit Mol objects.
+        """
+
+        out = []
+
+        for p in paths:
+            mol = MolFromPDBFile(str(path), removeHs=removeHs)
+            rdMolAlign.AlignMolConformers(mol)
+
+            for conformer in mol.GetConformers():
+                conf_mol = Mol(mol)
+                conf_mol.RemoveAllConformers()
+                conf_mol.AddConformer(conformer, assignId=True)
+                out.append(
+                    (
+                        Metamol.from_rdkit_mol(
+                            conf_mol,
+                            size,
+                            threshold,
+                            b,
+                            b_shape,
+                            radius_property,
+                            properties,
+                        ),
+                        conf_mol,
+                    )
+                )
+
+        return out
 
     @staticmethod
     def from_complex(

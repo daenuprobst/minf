@@ -38,6 +38,7 @@ dependencies = [
   "tqdm==4.67.1",
   "typer==0.15.1",
   "yt==4.4.0",
+  "umap-learn==0.5.7",
 ]
 
 [project.urls]
