@@ -950,7 +950,7 @@ class Metamol:
         """
 
         mol = MolFromPDBFile(str(path), removeHs=removeHs)
-        rdMolAlign.AlignMolConformers(mol)
+        # rdMolAlign.AlignMolConformers(mol)
 
         out = []
         for conformer in mol.GetConformers():

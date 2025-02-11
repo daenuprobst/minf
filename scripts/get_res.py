@@ -64,9 +64,7 @@ def main(
 
     decoder.cuda()
 
-    decoder.load_state_dict(
-        torch.load("../models/reconstruction_model_better.pt", weights_only=True)
-    )
+    decoder.load_state_dict(torch.load(model_file, weights_only=True))
     decoder.cuda()
 
     superres = [out_resolution, out_resolution, out_resolution, 6]
