@@ -3,6 +3,8 @@
 Interpolating between two conformation of the solution structure of a dimeric lactose DNA-binding domain complexed with a DNA sequence (PDB ID 1OSL), using a single modulated network trained as an auto-encoder.<br>
 (The animation below may take some time to load)<br><br>
 <img src="https://github.com/daenuprobst/minf/blob/main/assets/anim.gif?raw=true">
+Alternatively, view the file here:
+https://anonymous.4open.science/r/DB1B/assets/anim.gif?raw=true
 
 ## Table of Contents
 
