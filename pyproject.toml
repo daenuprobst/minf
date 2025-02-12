@@ -11,7 +11,7 @@ requires-python = ">=3.8"
 license = "MIT"
 keywords = []
 authors = [
-  { name = "Daniel Probst", email = "daenuprobst@gmail.com" },
+  { name = "Daniel Probst", email = "anon@gmail.com" },
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -41,10 +41,6 @@ dependencies = [
   "umap-learn==0.5.7",
 ]
 
-[project.urls]
-Documentation = "https://github.com/Daniel Probst/minf#readme"
-Issues = "https://github.com/Daniel Probst/minf/issues"
-Source = "https://github.com/Daniel Probst/minf"
 
 [tool.hatch.version]
 path = "src/minf/__about__.py"
