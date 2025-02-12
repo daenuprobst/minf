@@ -1,9 +1,8 @@
 # MINF
-
-[![PyPI - Version](https://img.shields.io/pypi/v/minf.svg)](https://pypi.org/project/minf)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/minf.svg)](https://pypi.org/project/minf)
-
 -----
+Interpolating between two conformation of the solution structure of a dimeric lactose DNA-binding domain complexed with a DNA sequence (PDB ID 1OSL), using a single modulated network as an auto-encoder.
+(The animation below may take some time to load)
+<img src="https://github.com/daenuprobst/minf/blob/main/assets/anim.gif?raw=true">
 
 ## Table of Contents
 
