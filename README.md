@@ -13,7 +13,7 @@
 ## Installation
 
 ```console
-pip install minf
+pip install .
 ```
 
 ## License
