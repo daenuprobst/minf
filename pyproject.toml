@@ -10,9 +10,7 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = "MIT"
 keywords = []
-authors = [
-  { name = "Daniel Probst", email = "anon@gmail.com" },
-]
+authors = [{ name = "Daniel Probst", email = "anon@gmail.com" }]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Programming Language :: Python",
@@ -38,7 +36,6 @@ dependencies = [
   "tqdm==4.67.1",
   "typer==0.15.1",
   "yt==4.4.0",
-  "umap-learn==0.5.7",
 ]
 
 
@@ -46,9 +43,7 @@ dependencies = [
 path = "src/minf/__about__.py"
 
 [tool.hatch.envs.types]
-extra-dependencies = [
-  "mypy>=1.0.0",
-]
+extra-dependencies = ["mypy>=1.0.0"]
 [tool.hatch.envs.types.scripts]
 check = "mypy --install-types --non-interactive {args:src/minf tests}"
 
@@ -56,17 +51,11 @@ check = "mypy --install-types --non-interactive {args:src/minf tests}"
 source_pkgs = ["minf", "tests"]
 branch = true
 parallel = true
-omit = [
-  "src/minf/__about__.py",
-]
+omit = ["src/minf/__about__.py"]
 
 [tool.coverage.paths]
 minf = ["src/minf", "*/minf/src/minf"]
 tests = ["tests", "*/minf/tests"]
 
 [tool.coverage.report]
-exclude_lines = [
-  "no cov",
-  "if __name__ == .__main__.:",
-  "if TYPE_CHECKING:",
-]
+exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
